@@ -192,7 +192,48 @@
             + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(r(lng2 - lng1) / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
+  const stopCoords = {
+  "KLS GIT":           { lat: 15.8155, lng: 74.4868 },
+  "Mahantesh Nagar":   { lat: 15.8734, lng: 74.5350 },
+  "Hanuman Nagar":     { lat: 15.8765, lng: 74.4862 },
+  "Vadagaon":          { lat: 15.8365, lng: 74.5234 },
+  "Kakati":            { lat: 15.9318, lng: 74.5270 },
+  "Shahapur":          { lat: 15.8461, lng: 74.5167 },
+  "Bhagya Nagar":      { lat: 15.8288, lng: 74.5066 },
+  "Shahu Nagar":       { lat: 15.8927, lng: 74.5126 },
+  "Khanapur":          { lat: 15.6452, lng: 74.5214 },
+  "Channamma Circle":  { lat: 15.8673, lng: 74.5116 },
+  "RTO":               { lat: 15.8964, lng: 74.5425 },
+  "Ramteerth Nagar":   { lat: 15.8907, lng: 74.5433 },
+  "Marihal":           { lat: 15.8801, lng: 74.5607 },
+  "Machche":           { lat: 15.7875, lng: 74.4727 },
+  "CBT":               { lat: 15.8560, lng: 74.5060 },
+  "Fish Market":       { lat: 15.8530, lng: 74.5030 },
+  "Bogar Ves":         { lat: 15.8460, lng: 74.4940 },
+  "RC Nagar":          { lat: 15.8490, lng: 74.5010 },
+  "Utsav":             { lat: 15.8460, lng: 74.4960 },
+  "Fort Circle":       { lat: 15.8530, lng: 74.5050 },
+  "Arun Theatre":      { lat: 15.8500, lng: 74.5030 }
+};
 
+const busRoutes = {
+  bus1:  ["KLS GIT","Bogar Ves","Fish Market","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
+  bus2:  ["KLS GIT","RC Nagar","Utsav","Channamma Circle","Mahantesh Nagar","Ramteerth Nagar"],
+  bus3:  ["KLS GIT","Bogar Ves","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar"],
+  bus4:  ["KLS GIT","RPD","Goa Ves","Nath Pai Circle","Vadagaon"],
+  bus5:  ["KLS GIT","Fort Circle","Gandhi Nagar","Shindoli Cross","Marihal","RC Nagar"],
+  bus6:  ["KLS GIT","RPD","Goa Ves","Nath Pai Circle","Vadagaon"],
+  bus7:  ["KLS GIT","Machche","BCM Hostel","Khanapur"],
+  bus8:  ["KLS GIT","Goa Ves","Fish Market","Channamma Circle","RTO","CBT","Bogar Ves"],
+  bus9:  ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
+  bus10: ["KLS GIT","Machche","BCM Hostel","Khanapur"],
+  bus11: ["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
+  bus12: ["KLS GIT","Congress Road","Camp","Nehru Nagar","Shahu Nagar"],
+  bus13: ["KLS GIT","Arun Theatre","Fish Market","Vinayak Nagar","Sulga","Uchagoan"],
+  bus14: ["KLS GIT","Utsav","RPD","Goa Ves","Tukaram Bank","Shahapur"],
+  bus15: ["KLS GIT","Bogar Ves","Channamma Circle","Azam Nagar","Indal","Kakati"],
+  bus16: ["KLS GIT","Bogar Ves","Channamma Circle","Srinagar Garden","Ganesh Chouk","Ramteerth Nagar"]
+};
   let busMarker       = null;
   let currentListener = null;
 
@@ -210,33 +251,47 @@
     document.getElementById('etaCard').style.display = 'none';
 
     currentListener = db.ref('liveLocation/' + selectedBus);
-    currentListener.on('value', snapshot => {
-      const data = snapshot.val();
+   currentListener.on('value', (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    const { lat, lng } = data;
+    document.getElementById('info').innerText = '🟢 ' + bus.name + ' is LIVE!';
+    if (!busMarker) {
+      busMarker = L.marker([lat, lng]).addTo(map).bindPopup(bus.name).openPopup();
+    } else {
+      busMarker.setLatLng([lat, lng]);
+    }
+    map.setView([lat, lng], 15);
 
-      if (data) {
-        const { lat, lng } = data;
-        document.getElementById('info').innerText = '🟢 ' + bus.name + ' is LIVE!';
-
-        if (!busMarker) {
-          busMarker = L.marker([lat, lng]).addTo(map).bindPopup(bus.name).openPopup();
-        } else {
-          busMarker.setLatLng([lat, lng]);
+    // Find nearest upcoming stop on this bus route
+    const route = busRoutes[selectedBus];
+    let nearestStop = null;
+    let minDist = Infinity;
+    if (route) {
+      route.forEach(stopName => {
+        const coord = stopCoords[stopName];
+        if (!coord) return;
+        const d = haversineKm(lat, lng, coord.lat, coord.lng);
+        if (d < minDist) {
+          minDist = d;
+          nearestStop = { name: stopName, dist: d };
         }
+      });
+    }
 
-        map.setView([lat, lng], 15);
+    if (nearestStop) {
+      const etaMins = Math.round(nearestStop.dist / 0.5);
+      document.getElementById('etaTime').textContent = etaMins + ' min';
+      document.getElementById('etaSub').textContent  = '📍 ' + nearestStop.name;
+      document.getElementById('etaDist').textContent = nearestStop.dist.toFixed(1) + ' km away';
+      document.getElementById('etaCard').style.display = 'block';
+    }
 
-        const distKm  = haversineKm(lat, lng, COLLEGE_LAT, COLLEGE_LNG);
-        const etaMins = Math.round(distKm / 0.5);
-        document.getElementById('etaTime').textContent = etaMins + ' min';
-        document.getElementById('etaSub').textContent  = 'to KLS GIT College';
-        document.getElementById('etaDist').textContent = '📍 ' + distKm.toFixed(1) + ' km away';
-        document.getElementById('etaCard').style.display = 'block';
-
-      } else {
-        document.getElementById('info').innerText = '🔴 ' + bus.name + ' not live yet';
-        document.getElementById('etaCard').style.display = 'none';
-      }
-    });
+  } else {
+    document.getElementById('info').innerText = '🔴 ' + bus.name + ' not live yet';
+    document.getElementById('etaCard').style.display = 'none';
+  }
+});
   }
 </script>
 </body>
