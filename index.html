@@ -29,7 +29,6 @@
     }
     #info { font-size: 0.85rem; font-weight: bold; color: #333; }
     #driverInfo { font-size: 0.72rem; color: #666; margin-top: 4px; }
-
     #etaCard {
       position: absolute;
       bottom: 24px;
@@ -56,8 +55,9 @@
     }
     #etaCard .eta-sub {
       font-size: 11px;
-      color: #666;
+      color: #333;
       margin-top: 2px;
+      font-weight: bold;
     }
     #etaCard .eta-dist {
       font-size: 12px;
@@ -96,9 +96,9 @@
 <div id="map"></div>
 
 <div id="etaCard">
-  <div class="eta-label">⏱ Approx. ETA</div>
+  <div class="eta-label">⏱ Next Stop ETA</div>
   <div class="eta-time" id="etaTime">—</div>
-  <div class="eta-sub"  id="etaSub">to college</div>
+  <div class="eta-sub"  id="etaSub">calculating...</div>
   <div class="eta-dist" id="etaDist"></div>
 </div>
 
@@ -133,108 +133,130 @@
   }).addTo(map);
 
   const busData = {
-    bus1:  { name: "Bus 1 - Mahantesh Nagar",     driver: "Indrajeet Karvekar",     phone: "9008625349", time: "7:30 AM" },
-    bus2:  { name: "Bus 2 - Kakati/Hanuman Nagar", driver: "Sushil H. Patil",        phone: "7795135936", time: "7:50 AM" },
-    bus3:  { name: "Bus 3 - Hanuman Nagar",        driver: "Ragavendra Deepak N",    phone: "8073035140", time: "7:50 AM" },
-    bus4:  { name: "Bus 4 - Vadagaon",             driver: "Kannappa Baganal",       phone: "9964810056", time: "7:50 AM" },
-    bus5:  { name: "Bus 5 - Marihal/RC Nagar",     driver: "S. M. Kalasekar",        phone: "9164332711", time: "7:30 AM" },
-    bus6:  { name: "Bus 6 - Vadagaon",             driver: "V. S. Kambar",           phone: "9663763819", time: "7:50 AM" },
-    bus7:  { name: "Bus 7 - Khanapur",             driver: "New Staff",              phone: "—",          time: "7:40 AM" },
-    bus8:  { name: "Bus 8 - CBT/RTO",              driver: "Vinod Arjun Patil",      phone: "7338667662", time: "7:50 AM" },
-    bus9:  { name: "Bus 9 - Marihal",              driver: "Ravi Dandagal",          phone: "8197297335", time: "9:00 AM" },
-    bus10: { name: "Bus 10 - Khanapur",            driver: "Bharama D",              phone: "9985166439", time: "9:00 AM" },
-    bus11: { name: "Bus 11 - RC Nagar",            driver: "Manjunath Mailannavar",  phone: "9972781413", time: "7:50 AM" },
-    bus12: { name: "Bus 12 - Shahu Nagar",         driver: "Praveen Shivaji Tupare", phone: "9902949685", time: "7:40 AM" },
-    bus13: { name: "Bus 13 - Uchagoan",            driver: "Bharat N. Dhangavde",    phone: "9844614143", time: "7:30 AM" },
-    bus14: { name: "Bus 14 - Shahapur",            driver: "Sanjay Tarihalkar",      phone: "9886867705", time: "7:50 AM" },
-    bus15: { name: "Bus 15 - Kakati",              driver: "C. I. Sangammanavar",    phone: "9008808351", time: "7:40 AM" },
-    bus16: { name: "Bus 16 - Ramteerth Nagar",     driver: "Babu P. Chalvatkar",     phone: "9686149872", time: "7:50 AM" }
+    bus1:  { name:"Bus 1 - Mahantesh Nagar",     driver:"Indrajeet Karvekar",     phone:"9008625349", time:"7:30 AM" },
+    bus2:  { name:"Bus 2 - Kakati/Hanuman Nagar", driver:"Sushil H. Patil",        phone:"7795135936", time:"7:50 AM" },
+    bus3:  { name:"Bus 3 - Hanuman Nagar",        driver:"Ragavendra Deepak N",    phone:"8073035140", time:"7:50 AM" },
+    bus4:  { name:"Bus 4 - Vadagaon",             driver:"Kannappa Baganal",       phone:"9964810056", time:"7:50 AM" },
+    bus5:  { name:"Bus 5 - Marihal/RC Nagar",     driver:"S. M. Kalasekar",        phone:"9164332711", time:"7:30 AM" },
+    bus6:  { name:"Bus 6 - Vadagaon",             driver:"V. S. Kambar",           phone:"9663763819", time:"7:50 AM" },
+    bus7:  { name:"Bus 7 - Khanapur",             driver:"New Staff",              phone:"—",          time:"7:40 AM" },
+    bus8:  { name:"Bus 8 - CBT/RTO",              driver:"Vinod Arjun Patil",      phone:"7338667662", time:"7:50 AM" },
+    bus9:  { name:"Bus 9 - Marihal",              driver:"Ravi Dandagal",          phone:"8197297335", time:"9:00 AM" },
+    bus10: { name:"Bus 10 - Khanapur",            driver:"Bharama D",              phone:"9985166439", time:"9:00 AM" },
+    bus11: { name:"Bus 11 - RC Nagar",            driver:"Manjunath Mailannavar",  phone:"9972781413", time:"7:50 AM" },
+    bus12: { name:"Bus 12 - Shahu Nagar",         driver:"Praveen Shivaji Tupare", phone:"9902949685", time:"7:40 AM" },
+    bus13: { name:"Bus 13 - Uchagoan",            driver:"Bharat N. Dhangavde",    phone:"9844614143", time:"7:30 AM" },
+    bus14: { name:"Bus 14 - Shahapur",            driver:"Sanjay Tarihalkar",      phone:"9886867705", time:"7:50 AM" },
+    bus15: { name:"Bus 15 - Kakati",              driver:"C. I. Sangammanavar",    phone:"9008808351", time:"7:40 AM" },
+    bus16: { name:"Bus 16 - Ramteerth Nagar",     driver:"Babu P. Chalvatkar",     phone:"9686149872", time:"7:50 AM" }
+  };
+
+  const stopCoords = {
+    "KLS GIT":          { lat:15.8155, lng:74.4868 },
+    "Mahantesh Nagar":  { lat:15.8734, lng:74.5350 },
+    "Hanuman Nagar":    { lat:15.8765, lng:74.4862 },
+    "Vadagaon":         { lat:15.8365, lng:74.5234 },
+    "Kakati":           { lat:15.9318, lng:74.5270 },
+    "Shahapur":         { lat:15.8461, lng:74.5167 },
+    "Bhagya Nagar":     { lat:15.8288, lng:74.5066 },
+    "Shahu Nagar":      { lat:15.8927, lng:74.5126 },
+    "Khanapur":         { lat:15.6452, lng:74.5214 },
+    "Channamma Circle": { lat:15.8673, lng:74.5116 },
+    "RTO":              { lat:15.8964, lng:74.5425 },
+    "Ramteerth Nagar":  { lat:15.8907, lng:74.5433 },
+    "Marihal":          { lat:15.8801, lng:74.5607 },
+    "Machche":          { lat:15.7875, lng:74.4727 },
+    "CBT":              { lat:15.8560, lng:74.5060 },
+    "Fish Market":      { lat:15.8530, lng:74.5030 },
+    "Bogar Ves":        { lat:15.8460, lng:74.4940 },
+    "RC Nagar":         { lat:15.8490, lng:74.5010 },
+    "Utsav":            { lat:15.8460, lng:74.4960 },
+    "Fort Circle":      { lat:15.8530, lng:74.5050 },
+    "Arun Theatre":     { lat:15.8500, lng:74.5030 },
+    "BCM Hostel":       { lat:15.8440, lng:74.4900 },
+    "Indal":            { lat:15.9029, lng:74.5250 },
+    "Azam Nagar":       { lat:15.8530, lng:74.5060 },
+    "Srinagar Garden":  { lat:15.8600, lng:74.5100 },
+    "Ganesh Chouk":     { lat:15.8630, lng:74.5070 },
+    "Tukaram Bank":     { lat:15.8490, lng:74.5010 },
+    "Vinayak Nagar":    { lat:15.8500, lng:74.5030 },
+    "Sulga":            { lat:15.8800, lng:74.5200 },
+    "Nehru Nagar":      { lat:15.8510, lng:74.5030 },
+    "Camp":             { lat:15.8490, lng:74.5010 },
+    "Gandhi Nagar":     { lat:15.8720, lng:74.5200 },
+    "Raghunath Peth":   { lat:15.8480, lng:74.4970 },
+    "KLE Engg College": { lat:15.8480, lng:74.4970 },
+    "Mandoli Road":     { lat:15.8400, lng:74.5000 },
+    "Guru Prasad Colony":{ lat:15.8460, lng:74.4960 },
+    "Congress Road":    { lat:15.8490, lng:74.5010 },
+    "Sadashiv Nagar":   { lat:15.8490, lng:74.5020 },
+    "TV Centre":        { lat:15.8570, lng:74.5090 },
+    "Goa Ves":          { lat:15.8460, lng:74.4940 },
+    "Nath Pai Circle":  { lat:15.8480, lng:74.4950 },
+    "RPD":              { lat:15.8460, lng:74.4980 },
+    "Shindoli Cross":   { lat:15.8720, lng:74.5200 },
+    "BCM Hostel":       { lat:15.8440, lng:74.4900 }
+  };
+
+  const busRoutes = {
+    bus1:  ["Mahantesh Nagar","RTO","CBT","Arun Theatre","Fish Market","Bogar Ves","KLS GIT"],
+    bus2:  ["Ramteerth Nagar","Mahantesh Nagar","Channamma Circle","Utsav","RC Nagar","KLS GIT"],
+    bus3:  ["Hanuman Nagar","TV Centre","Sadashiv Nagar","Congress Road","Bogar Ves","KLS GIT"],
+    bus4:  ["Vadagaon","Nath Pai Circle","Goa Ves","RPD","KLS GIT"],
+    bus5:  ["RC Nagar","Marihal","Shindoli Cross","Gandhi Nagar","Fort Circle","KLS GIT"],
+    bus6:  ["Vadagaon","Nath Pai Circle","Goa Ves","RPD","KLS GIT"],
+    bus7:  ["Khanapur","BCM Hostel","Machche","KLS GIT"],
+    bus8:  ["Bogar Ves","CBT","RTO","Channamma Circle","Fish Market","Goa Ves","KLS GIT"],
+    bus9:  ["Bhagya Nagar","Raghunath Peth","KLE Engg College","KLS GIT"],
+    bus10: ["Khanapur","BCM Hostel","Machche","KLS GIT"],
+    bus11: ["RC Nagar","Mandoli Road","Guru Prasad Colony","KLS GIT"],
+    bus12: ["Shahu Nagar","Nehru Nagar","Camp","Congress Road","KLS GIT"],
+    bus13: ["Sulga","Vinayak Nagar","Fish Market","Arun Theatre","KLS GIT"],
+    bus14: ["Shahapur","Tukaram Bank","Goa Ves","RPD","Utsav","KLS GIT"],
+    bus15: ["Kakati","Indal","Azam Nagar","Channamma Circle","Bogar Ves","KLS GIT"],
+    bus16: ["Ramteerth Nagar","Ganesh Chouk","Srinagar Garden","Channamma Circle","Bogar Ves","KLS GIT"]
   };
 
   const stops = [
-    { name: "KLS GIT College",      lat: 15.8155, lng: 74.4868, isCollege: true },
-    { name: "Mahantesh Nagar",      lat: 15.8734, lng: 74.5350 },
-    { name: "Hanuman Nagar",        lat: 15.8765, lng: 74.4862 },
-    { name: "Vadagaon",             lat: 15.8365, lng: 74.5234 },
-    { name: "Kakati",               lat: 15.9318, lng: 74.5270 },
-    { name: "Shahapur",             lat: 15.8461, lng: 74.5167 },
-    { name: "Bhagya Nagar",         lat: 15.8288, lng: 74.5066 },
-    { name: "Shahu Nagar",          lat: 15.8927, lng: 74.5126 },
-    { name: "Khanapur",             lat: 15.6452, lng: 74.5214 },
-    { name: "Channamma Circle",     lat: 15.8673, lng: 74.5116 },
-    { name: "RTO",                  lat: 15.8964, lng: 74.5425 },
-    { name: "Ramteerth Nagar",      lat: 15.8907, lng: 74.5433 },
-    { name: "Marihal",              lat: 15.8801, lng: 74.5607 },
-    { name: "Indal Colony",         lat: 15.9029, lng: 74.5250 },
-    { name: "Sambra",               lat: 15.8642, lng: 74.6107 },
-    { name: "Machche",              lat: 15.7875, lng: 74.4727 },
-    { name: "Tilakwadi",            lat: 15.8373, lng: 74.5014 },
-    { name: "Angol",                lat: 15.8197, lng: 74.5020 },
-    { name: "Rani Chennamma Nagar", lat: 15.8276, lng: 74.4899 }
+    { name:"KLS GIT College",      lat:15.8155, lng:74.4868, isCollege:true },
+    { name:"Mahantesh Nagar",      lat:15.8734, lng:74.5350 },
+    { name:"Hanuman Nagar",        lat:15.8765, lng:74.4862 },
+    { name:"Vadagaon",             lat:15.8365, lng:74.5234 },
+    { name:"Kakati",               lat:15.9318, lng:74.5270 },
+    { name:"Shahapur",             lat:15.8461, lng:74.5167 },
+    { name:"Bhagya Nagar",         lat:15.8288, lng:74.5066 },
+    { name:"Shahu Nagar",          lat:15.8927, lng:74.5126 },
+    { name:"Khanapur",             lat:15.6452, lng:74.5214 },
+    { name:"Channamma Circle",     lat:15.8673, lng:74.5116 },
+    { name:"RTO",                  lat:15.8964, lng:74.5425 },
+    { name:"Ramteerth Nagar",      lat:15.8907, lng:74.5433 },
+    { name:"Marihal",              lat:15.8801, lng:74.5607 },
+    { name:"Indal Colony",         lat:15.9029, lng:74.5250 },
+    { name:"Sambra",               lat:15.8642, lng:74.6107 },
+    { name:"Machche",              lat:15.7875, lng:74.4727 },
+    { name:"Tilakwadi",            lat:15.8373, lng:74.5014 },
+    { name:"Angol",                lat:15.8197, lng:74.5020 },
+    { name:"Rani Chennamma Nagar", lat:15.8276, lng:74.4899 }
   ];
 
   stops.forEach(stop => {
     const color = stop.isCollege ? 'red' : 'blue';
     const size  = stop.isCollege ? 16 : 12;
     const html  = `<div style="background:${color};width:${size}px;height:${size}px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.5)"></div>`;
-    const icon  = L.divIcon({ className: '', html, iconSize: [size, size], iconAnchor: [size/2, size/2] });
+    const icon  = L.divIcon({ className:'', html, iconSize:[size,size], iconAnchor:[size/2,size/2] });
     L.marker([stop.lat, stop.lng], { icon })
       .addTo(map)
       .bindPopup('<b>' + (stop.isCollege ? '🏫 ' : '🚏 ') + stop.name + '</b>');
   });
 
-  const COLLEGE_LAT = 15.8155;
-  const COLLEGE_LNG = 74.4868;
-
   function haversineKm(lat1, lng1, lat2, lng2) {
     const R = 6371, r = d => d * Math.PI / 180;
-    const a = Math.sin(r(lat2 - lat1) / 2) ** 2
-            + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(r(lng2 - lng1) / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const a = Math.sin(r(lat2-lat1)/2)**2
+            + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(r(lng2-lng1)/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
-  const stopCoords = {
-  "KLS GIT":           { lat: 15.8155, lng: 74.4868 },
-  "Mahantesh Nagar":   { lat: 15.8734, lng: 74.5350 },
-  "Hanuman Nagar":     { lat: 15.8765, lng: 74.4862 },
-  "Vadagaon":          { lat: 15.8365, lng: 74.5234 },
-  "Kakati":            { lat: 15.9318, lng: 74.5270 },
-  "Shahapur":          { lat: 15.8461, lng: 74.5167 },
-  "Bhagya Nagar":      { lat: 15.8288, lng: 74.5066 },
-  "Shahu Nagar":       { lat: 15.8927, lng: 74.5126 },
-  "Khanapur":          { lat: 15.6452, lng: 74.5214 },
-  "Channamma Circle":  { lat: 15.8673, lng: 74.5116 },
-  "RTO":               { lat: 15.8964, lng: 74.5425 },
-  "Ramteerth Nagar":   { lat: 15.8907, lng: 74.5433 },
-  "Marihal":           { lat: 15.8801, lng: 74.5607 },
-  "Machche":           { lat: 15.7875, lng: 74.4727 },
-  "CBT":               { lat: 15.8560, lng: 74.5060 },
-  "Fish Market":       { lat: 15.8530, lng: 74.5030 },
-  "Bogar Ves":         { lat: 15.8460, lng: 74.4940 },
-  "RC Nagar":          { lat: 15.8490, lng: 74.5010 },
-  "Utsav":             { lat: 15.8460, lng: 74.4960 },
-  "Fort Circle":       { lat: 15.8530, lng: 74.5050 },
-  "Arun Theatre":      { lat: 15.8500, lng: 74.5030 }
-};
 
-const busRoutes = {
-  bus1:  ["KLS GIT","Bogar Ves","Fish Market","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
-  bus2:  ["KLS GIT","RC Nagar","Utsav","Channamma Circle","Mahantesh Nagar","Ramteerth Nagar"],
-  bus3:  ["KLS GIT","Bogar Ves","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar"],
-  bus4:  ["KLS GIT","RPD","Goa Ves","Nath Pai Circle","Vadagaon"],
-  bus5:  ["KLS GIT","Fort Circle","Gandhi Nagar","Shindoli Cross","Marihal","RC Nagar"],
-  bus6:  ["KLS GIT","RPD","Goa Ves","Nath Pai Circle","Vadagaon"],
-  bus7:  ["KLS GIT","Machche","BCM Hostel","Khanapur"],
-  bus8:  ["KLS GIT","Goa Ves","Fish Market","Channamma Circle","RTO","CBT","Bogar Ves"],
-  bus9:  ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
-  bus10: ["KLS GIT","Machche","BCM Hostel","Khanapur"],
-  bus11: ["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
-  bus12: ["KLS GIT","Congress Road","Camp","Nehru Nagar","Shahu Nagar"],
-  bus13: ["KLS GIT","Arun Theatre","Fish Market","Vinayak Nagar","Sulga","Uchagoan"],
-  bus14: ["KLS GIT","Utsav","RPD","Goa Ves","Tukaram Bank","Shahapur"],
-  bus15: ["KLS GIT","Bogar Ves","Channamma Circle","Azam Nagar","Indal","Kakati"],
-  bus16: ["KLS GIT","Bogar Ves","Channamma Circle","Srinagar Garden","Ganesh Chouk","Ramteerth Nagar"]
-};
-  let busMarker       = null;
+  let busMarker = null;
   let currentListener = null;
 
   function selectBus() {
@@ -247,51 +269,54 @@ const busRoutes = {
 
     if (busMarker) { map.removeLayer(busMarker); busMarker = null; }
     if (currentListener) currentListener.off();
-
     document.getElementById('etaCard').style.display = 'none';
 
     currentListener = db.ref('liveLocation/' + selectedBus);
-   currentListener.on('value', (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    const { lat, lng } = data;
-    document.getElementById('info').innerText = '🟢 ' + bus.name + ' is LIVE!';
-    if (!busMarker) {
-      busMarker = L.marker([lat, lng]).addTo(map).bindPopup(bus.name).openPopup();
-    } else {
-      busMarker.setLatLng([lat, lng]);
-    }
-    map.setView([lat, lng], 15);
+    currentListener.on('value', snapshot => {
+      const data = snapshot.val();
 
-    // Find nearest upcoming stop on this bus route
-    const route = busRoutes[selectedBus];
-    let nearestStop = null;
-    let minDist = Infinity;
-    if (route) {
-      route.forEach(stopName => {
-        const coord = stopCoords[stopName];
-        if (!coord) return;
-        const d = haversineKm(lat, lng, coord.lat, coord.lng);
-        if (d < minDist) {
-          minDist = d;
-          nearestStop = { name: stopName, dist: d };
+      if (data) {
+        const { lat, lng } = data;
+        document.getElementById('info').innerText = '🟢 ' + bus.name + ' is LIVE!';
+
+        if (!busMarker) {
+          busMarker = L.marker([lat, lng]).addTo(map).bindPopup(bus.name).openPopup();
+        } else {
+          busMarker.setLatLng([lat, lng]);
         }
-      });
-    }
 
-    if (nearestStop) {
-      const etaMins = Math.round(nearestStop.dist / 0.5);
-      document.getElementById('etaTime').textContent = etaMins + ' min';
-      document.getElementById('etaSub').textContent  = '📍 ' + nearestStop.name;
-      document.getElementById('etaDist').textContent = nearestStop.dist.toFixed(1) + ' km away';
-      document.getElementById('etaCard').style.display = 'block';
-    }
+        map.setView([lat, lng], 15);
 
-  } else {
-    document.getElementById('info').innerText = '🔴 ' + bus.name + ' not live yet';
-    document.getElementById('etaCard').style.display = 'none';
-  }
-});
+        // Find nearest upcoming stop
+        const route = busRoutes[selectedBus];
+        let nearestStop = null;
+        let minDist = Infinity;
+
+        if (route) {
+          route.forEach(stopName => {
+            const coord = stopCoords[stopName];
+            if (!coord) return;
+            const d = haversineKm(lat, lng, coord.lat, coord.lng);
+            if (d < minDist) {
+              minDist = d;
+              nearestStop = { name: stopName, dist: d };
+            }
+          });
+        }
+
+        if (nearestStop) {
+          const etaMins = Math.round(nearestStop.dist / 0.5);
+          document.getElementById('etaTime').textContent = etaMins + ' min';
+          document.getElementById('etaSub').textContent  = '📍 ' + nearestStop.name;
+          document.getElementById('etaDist').textContent = nearestStop.dist.toFixed(1) + ' km away';
+          document.getElementById('etaCard').style.display = 'block';
+        }
+
+      } else {
+        document.getElementById('info').innerText = '🔴 ' + bus.name + ' not live yet';
+        document.getElementById('etaCard').style.display = 'none';
+      }
+    });
   }
 </script>
 </body>
