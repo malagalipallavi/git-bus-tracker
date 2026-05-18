@@ -13,64 +13,164 @@
       top: 10px; left: 50%;
       transform: translateX(-50%);
       background: white;
-      padding: 10px 16px;
+      padding: 10px 16px 8px;
       border-radius: 16px;
       z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
       text-align: center;
       min-width: 300px;
+      max-width: 90vw;
     }
     #busSelect {
       width: 100%;
-      padding: 8px;
+      padding: 8px 10px;
       font-size: 0.9rem;
       border-radius: 8px;
       border: 1px solid #ccc;
       margin-bottom: 6px;
+      background: #f9f9f9;
     }
-    #info { font-size: 0.85rem; font-weight: bold; color: #333; }
-    #driverInfo { font-size: 0.72rem; color: #666; margin-top: 4px; }
+    #info       { font-size: 0.85rem; font-weight: bold; color: #333; }
+    #driverInfo { font-size: 0.72rem; color: #666; margin-top: 3px; }
+
+    #homeStopBanner {
+      margin-top: 7px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      color: #166534;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    #homeStopText { font-weight: bold; }
+    #changeStopBtn {
+      background: none;
+      border: 1px solid #16a34a;
+      color: #16a34a;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
 
     #etaCard {
       position: absolute;
-      bottom: 30px;
-      right: 16px;
+      bottom: 30px; right: 16px;
       z-index: 1000;
       background: white;
       border-radius: 16px;
       padding: 14px 18px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      min-width: 160px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      min-width: 165px;
       display: none;
     }
-    #etaCard .eta-label {
-      font-size: 10px;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
+    .eta-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .eta-time  { font-size: 34px; font-weight: bold; color: #16a34a; line-height: 1; }
+    .eta-stop  { font-size: 13px; color: #333; font-weight: bold; margin-top: 4px; }
+    .eta-dist  { font-size: 12px; color: #d97706; font-weight: bold; margin-top: 3px; }
+    .eta-home  { font-size: 11px; color: #16a34a; margin-top: 8px; padding-top: 7px; border-top: 1px solid #e5e7eb; display: none; }
+
+    #setupModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000; align-items: center; justify-content: center;
     }
-    #etaCard .eta-time {
-      font-size: 34px;
-      font-weight: bold;
-      color: #16a34a;
-      line-height: 1;
+    #setupModal.show { display: flex; }
+    #setupBox {
+      background: white; border-radius: 20px;
+      padding: 24px 20px; width: min(340px, 90vw);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     }
-    #etaCard .eta-stop {
-      font-size: 13px;
-      color: #333;
-      font-weight: bold;
-      margin-top: 4px;
-    }
-    #etaCard .eta-dist {
-      font-size: 12px;
-      color: #d97706;
-      font-weight: bold;
-      margin-top: 4px;
-    }
+    #setupBox h2  { font-size: 1.1rem; font-weight: bold; color: #111; margin-bottom: 4px; }
+    #setupBox p   { font-size: 0.78rem; color: #666; margin-bottom: 14px; line-height: 1.5; }
+    #setupBox label { font-size: 0.78rem; color: #555; font-weight: bold; display: block; margin-bottom: 5px; }
+    #setupBox select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 0.88rem; margin-bottom: 12px; background: #f9f9f9; }
+    #saveProfileBtn { width: 100%; padding: 12px; background: #16a34a; color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+    #saveProfileBtn:hover { background: #15803d; }
+    #skipBtn { width: 100%; padding: 8px; background: none; color: #999; border: none; font-size: 0.8rem; cursor: pointer; margin-top: 6px; }
   </style>
 </head>
 <body>
+
+<div id="setupModal">
+  <div id="setupBox">
+    <h2>👋 Welcome to KLS GIT Bus Tracker</h2>
+    <p>Select your bus and home stop once. Next time the app loads your bus automatically!</p>
+    <label>Your Bus</label>
+    <select id="setupBus">
+      <option value="">-- Select your bus --</option>
+      <option value="bus1">Bus 1 — Mahantesh Nagar</option>
+      <option value="bus2">Bus 2 — Kakati / Hanuman Nagar</option>
+      <option value="bus3">Bus 3 — Hanuman Nagar</option>
+      <option value="bus4">Bus 4 — Vadagaon</option>
+      <option value="bus5">Bus 5 — Marihal / RC Nagar</option>
+      <option value="bus6">Bus 6 — Vadagaon</option>
+      <option value="bus7">Bus 7 — Khanapur</option>
+      <option value="bus8">Bus 8 — CBT / RTO</option>
+      <option value="bus9">Bus 9 — Marihal</option>
+      <option value="bus10">Bus 10 — Khanapur</option>
+      <option value="bus11">Bus 11 — RC Nagar</option>
+      <option value="bus12">Bus 12 — Shahu Nagar</option>
+      <option value="bus13">Bus 13 — Uchagoan</option>
+      <option value="bus14">Bus 14 — Shahapur</option>
+      <option value="bus15">Bus 15 — Kakati</option>
+      <option value="bus16">Bus 16 — Ramteerth Nagar</option>
+    </select>
+    <label>Your Home Stop</label>
+    <select id="setupStop">
+      <option value="">-- Select your stop --</option>
+      <option>Mahantesh Nagar</option>
+      <option>Ramteerth Nagar</option>
+      <option>Hanuman Nagar</option>
+      <option>RC Nagar</option>
+      <option>Vadagaon</option>
+      <option>Kakati</option>
+      <option>Shahapur</option>
+      <option>Bhagya Nagar</option>
+      <option>Shahu Nagar</option>
+      <option>Khanapur</option>
+      <option>Channamma Circle</option>
+      <option>RTO</option>
+      <option>Machhe</option>
+      <option>Marihal</option>
+      <option>Indal Colony</option>
+      <option>Azam Nagar</option>
+      <option>Fish Market</option>
+      <option>Sadashiv Nagar</option>
+      <option>TV Centre</option>
+      <option>Gandhi Nagar</option>
+      <option>Goa Ves</option>
+      <option>RPD Cross</option>
+      <option>KLE Engg College</option>
+      <option>Raghunath Peth</option>
+      <option>Guru Prasad Colony</option>
+      <option>Bogar Ves</option>
+      <option>Arun Theatre</option>
+      <option>CBT</option>
+      <option>Utsav</option>
+      <option>Fort Circle</option>
+      <option>BCM Hostel</option>
+      <option>Srinagar Garden</option>
+      <option>Ganesh Chouk</option>
+      <option>Tukaram Bank</option>
+      <option>Vinayak Nagar</option>
+      <option>Sulga</option>
+      <option>Nehru Nagar</option>
+      <option>Camp</option>
+      <option>Congress Road</option>
+      <option>Nath Pai Circle</option>
+      <option>Shindoli Cross</option>
+      <option>Mandoli Road</option>
+    </select>
+    <button id="saveProfileBtn" onclick="saveProfile()">✅ Save & Start Tracking</button>
+    <button id="skipBtn" onclick="skipSetup()">Skip for now</button>
+  </div>
+</div>
 
 <div id="topbar">
   <select id="busSelect" onchange="selectBus()">
@@ -94,6 +194,10 @@
   </select>
   <div id="info">🚌 Select a bus to track</div>
   <div id="driverInfo"></div>
+  <div id="homeStopBanner">
+    <span id="homeStopText">🏠 Home stop not set</span>
+    <button id="changeStopBtn" onclick="showSetup()">Change</button>
+  </div>
 </div>
 
 <div id="map"></div>
@@ -103,6 +207,7 @@
   <div class="eta-time" id="etaTime">—</div>
   <div class="eta-stop" id="etaStop"></div>
   <div class="eta-dist" id="etaDist"></div>
+  <div class="eta-home" id="etaHome"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -115,15 +220,18 @@
   });
   const db = firebase.database();
 
+  // Map — Google Maps style, Belgaum restricted
   const map = L.map('map', {
     center: [15.8300, 74.5100],
     zoom: 13,
     minZoom: 12,
     maxZoom: 19,
     maxBounds: [[15.62, 74.34],[15.97, 74.67]],
-    maxBoundsViscosity: 0.8
+    maxBoundsViscosity: 0.8,
+    rotate: false  // orientation never changes
   });
 
+  // Google Maps style tiles — CartoDB Voyager
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '© OpenStreetMap © CARTO',
     subdomains: 'abcd',
@@ -214,28 +322,29 @@
     bus16: ["Ramteerth Nagar","Ganesh Chouk","Srinagar Garden","Channamma Circle","Bogar Ves","KLS GIT"]
   };
 
+  // Stop markers
   const stops = [
-    { name:"KLS GIT College",      lat:15.8155, lng:74.4868, isCollege:true },
-    { name:"Mahantesh Nagar",      lat:15.8694, lng:74.5291 },
-    { name:"Ramteerth Nagar",      lat:15.8907, lng:74.5433 },
-    { name:"Hanuman Nagar",        lat:15.8765, lng:74.4862 },
-    { name:"RC Nagar",             lat:15.8276, lng:74.4899 },
-    { name:"Vadagaon",             lat:15.8365, lng:74.5234 },
-    { name:"Kakati",               lat:15.9318, lng:74.5270 },
-    { name:"Shahapur",             lat:15.8461, lng:74.5167 },
-    { name:"Bhagya Nagar",         lat:15.8288, lng:74.5066 },
-    { name:"Shahu Nagar",          lat:15.8927, lng:74.5126 },
-    { name:"Khanapur",             lat:15.6452, lng:74.5214 },
-    { name:"Channamma Circle",     lat:15.8673, lng:74.5116 },
-    { name:"RTO",                  lat:15.8964, lng:74.5425 },
-    { name:"Machhe",               lat:15.7875, lng:74.4727 },
-    { name:"Marihal",              lat:15.8801, lng:74.5607 },
-    { name:"Indal Colony",         lat:15.9029, lng:74.5250 },
-    { name:"Azam Nagar",           lat:15.8849, lng:74.5133 },
-    { name:"Fish Market",          lat:15.8608, lng:74.5181 },
-    { name:"Sadashiv Nagar",       lat:15.8797, lng:74.5081 },
-    { name:"Gandhi Nagar",         lat:15.8629, lng:74.5338 },
-    { name:"Guru Prasad Colony",   lat:15.8318, lng:74.4827 }
+    { name:"KLS GIT College",    lat:15.8155, lng:74.4868, isCollege:true },
+    { name:"Mahantesh Nagar",    lat:15.8694, lng:74.5291 },
+    { name:"Ramteerth Nagar",    lat:15.8907, lng:74.5433 },
+    { name:"Hanuman Nagar",      lat:15.8765, lng:74.4862 },
+    { name:"RC Nagar",           lat:15.8276, lng:74.4899 },
+    { name:"Vadagaon",           lat:15.8365, lng:74.5234 },
+    { name:"Kakati",             lat:15.9318, lng:74.5270 },
+    { name:"Shahapur",           lat:15.8461, lng:74.5167 },
+    { name:"Bhagya Nagar",       lat:15.8288, lng:74.5066 },
+    { name:"Shahu Nagar",        lat:15.8927, lng:74.5126 },
+    { name:"Khanapur",           lat:15.6452, lng:74.5214 },
+    { name:"Channamma Circle",   lat:15.8673, lng:74.5116 },
+    { name:"RTO",                lat:15.8964, lng:74.5425 },
+    { name:"Machhe",             lat:15.7875, lng:74.4727 },
+    { name:"Marihal",            lat:15.8801, lng:74.5607 },
+    { name:"Indal Colony",       lat:15.9029, lng:74.5250 },
+    { name:"Azam Nagar",         lat:15.8849, lng:74.5133 },
+    { name:"Fish Market",        lat:15.8608, lng:74.5181 },
+    { name:"Sadashiv Nagar",     lat:15.8797, lng:74.5081 },
+    { name:"Gandhi Nagar",       lat:15.8629, lng:74.5338 },
+    { name:"Guru Prasad Colony", lat:15.8318, lng:74.4827 }
   ];
 
   stops.forEach(stop => {
@@ -250,10 +359,8 @@
 
   function getDistance(lat1, lng1, lat2, lng2) {
     const R = 6371;
-    const dLat = (lat2-lat1) * Math.PI/180;
-    const dLng = (lng2-lng1) * Math.PI/180;
-    const a = Math.sin(dLat/2)**2 +
-              Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+    const dLat = (lat2-lat1)*Math.PI/180, dLng = (lng2-lng1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
@@ -270,16 +377,13 @@
     return nearest;
   }
 
-  // Smooth animation — moves marker gradually like Google Maps
+  // Smooth animation — exactly like Google Maps
   function animateMarker(marker, fromLat, fromLng, toLat, toLng, durationMs) {
     const startTime = performance.now();
     function step(now) {
       const elapsed  = now - startTime;
       const progress = Math.min(elapsed / durationMs, 1);
-      // Ease in-out curve
-      const ease = progress < 0.5
-        ? 2 * progress * progress
-        : -1 + (4 - 2 * progress) * progress;
+      const ease = progress < 0.5 ? 2*progress*progress : -1+(4-2*progress)*progress;
       marker.setLatLng([
         fromLat + (toLat - fromLat) * ease,
         fromLng + (toLng - fromLng) * ease
@@ -287,6 +391,43 @@
       if (progress < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
+  }
+
+  // Profile — saved in phone memory forever
+  let myBus  = localStorage.getItem('git_myBus')  || '';
+  let myStop = localStorage.getItem('git_myStop') || '';
+
+  function saveProfile() {
+    const bus  = document.getElementById('setupBus').value;
+    const stop = document.getElementById('setupStop').value;
+    if (!bus || !stop) { alert('Please select both your bus and your stop!'); return; }
+    localStorage.setItem('git_myBus',  bus);
+    localStorage.setItem('git_myStop', stop);
+    myBus  = bus;
+    myStop = stop;
+    document.getElementById('setupModal').classList.remove('show');
+    applyProfile();
+    selectBus();
+  }
+
+  function skipSetup() {
+    document.getElementById('setupModal').classList.remove('show');
+  }
+
+  function showSetup() {
+    document.getElementById('setupBus').value  = myBus;
+    document.getElementById('setupStop').value = myStop;
+    document.getElementById('setupModal').classList.add('show');
+  }
+
+  function applyProfile() {
+    if (myBus && myStop) {
+      const banner = document.getElementById('homeStopBanner');
+      banner.style.display = 'flex';
+      document.getElementById('homeStopText').textContent =
+        '🏠 ' + myStop + '  ·  ' + (busData[myBus]?.name || myBus);
+      document.getElementById('busSelect').value = myBus;
+    }
   }
 
   let busMarker      = null;
@@ -308,63 +449,3 @@
     const bus = busData[selectedBus];
     document.getElementById('info').innerText = '🔍 Looking for ' + bus.name + '...';
     document.getElementById('driverInfo').innerText = '👤 ' + bus.driver + '  📞 ' + bus.phone + '  ⏰ ' + bus.time;
-    document.getElementById('etaCard').style.display = 'none';
-
-    if (busMarker)       { map.removeLayer(busMarker); busMarker = null; }
-    if (routeLine)       { map.removeLayer(routeLine); routeLine = null; }
-    if (currentListener) { currentListener.off(); }
-    lastLat = null; lastLng = null;
-
-    // Draw route line
-    const route = busRoutes[selectedBus];
-    if (route) {
-      const latlngs = route
-        .filter(s => stopCoords[s])
-        .map(s => [stopCoords[s].lat, stopCoords[s].lng]);
-      routeLine = L.polyline(latlngs, {
-        color: '#e74c3c',
-        weight: 4,
-        opacity: 0.75,
-        dashArray: '10, 8'
-      }).addTo(map);
-    }
-
-    currentListener = db.ref('liveLocation/' + selectedBus);
-    currentListener.on('value', snapshot => {
-      const data = snapshot.val();
-
-      if (data) {
-        const { lat, lng } = data;
-        document.getElementById('info').innerText = '🟢 ' + bus.name + ' is LIVE!';
-
-        if (!busMarker) {
-          busMarker = L.marker([lat, lng], { icon: busIcon })
-            .addTo(map).bindPopup(bus.name).openPopup();
-          map.setView([lat, lng], 15);
-        } else {
-          // Animate smoothly over 3 seconds
-          animateMarker(busMarker, lastLat, lastLng, lat, lng, 3000);
-          map.panTo([lat, lng], { animate: true, duration: 1.5 });
-        }
-
-        lastLat = lat;
-        lastLng = lng;
-
-        const nearest = getNearestStop(selectedBus, lat, lng);
-        if (nearest) {
-          const etaMins = Math.round((nearest.dist / 30) * 60);
-          document.getElementById('etaTime').textContent = etaMins + ' min';
-          document.getElementById('etaStop').textContent = '📍 ' + nearest.name;
-          document.getElementById('etaDist').textContent = nearest.dist.toFixed(1) + ' km away';
-          document.getElementById('etaCard').style.display = 'block';
-        }
-
-      } else {
-        document.getElementById('info').innerText = '🔴 ' + bus.name + ' not live yet';
-        document.getElementById('etaCard').style.display = 'none';
-      }
-    });
-  }
-</script>
-</body>
-</html>
