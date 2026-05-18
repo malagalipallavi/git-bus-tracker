@@ -113,6 +113,7 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
+  // ── Belgaum Taluk bounds ────────────────────────────────
   const BELAGAVI_BOUNDS = L.latLngBounds(
     L.latLng(15.74, 74.34),
     L.latLng(15.97, 74.67)
@@ -121,17 +122,20 @@
   const map = L.map('map', {
     center: [15.8500, 74.5000],
     zoom: 13,
-    minZoom: 11,
-    maxZoom: 18,
+    minZoom: 12,         // can't zoom out past Belgaum city
+    maxZoom: 19,
     maxBounds: BELAGAVI_BOUNDS,
-    maxBoundsViscosity: 1.0
+    maxBoundsViscosity: 0.8   // soft wall — allows smooth panning, snaps back
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
+  // ── Google Maps style tile layer (CartoDB Positron) ─────
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
   }).addTo(map);
 
+  // ── Bus data ────────────────────────────────────────────
   const busData = {
     bus1:  { name:"Bus 1 - Mahantesh Nagar",     driver:"Indrajeet Karvekar",     phone:"9008625349", time:"7:30 AM" },
     bus2:  { name:"Bus 2 - Kakati/Hanuman Nagar", driver:"Sushil H. Patil",        phone:"7795135936", time:"7:50 AM" },
@@ -151,51 +155,51 @@
     bus16: { name:"Bus 16 - Ramteerth Nagar",     driver:"Babu P. Chalvatkar",     phone:"9686149872", time:"7:50 AM" }
   };
 
+  // ── Stop coordinates ────────────────────────────────────
   const stopCoords = {
-    "KLS GIT":          { lat:15.8155, lng:74.4868 },
-    "Mahantesh Nagar":  { lat:15.8734, lng:74.5350 },
-    "Hanuman Nagar":    { lat:15.8765, lng:74.4862 },
-    "Vadagaon":         { lat:15.8365, lng:74.5234 },
-    "Kakati":           { lat:15.9318, lng:74.5270 },
-    "Shahapur":         { lat:15.8461, lng:74.5167 },
-    "Bhagya Nagar":     { lat:15.8288, lng:74.5066 },
-    "Shahu Nagar":      { lat:15.8927, lng:74.5126 },
-    "Khanapur":         { lat:15.6452, lng:74.5214 },
-    "Channamma Circle": { lat:15.8673, lng:74.5116 },
-    "RTO":              { lat:15.8964, lng:74.5425 },
-    "Ramteerth Nagar":  { lat:15.8907, lng:74.5433 },
-    "Marihal":          { lat:15.8801, lng:74.5607 },
-    "Machche":          { lat:15.7875, lng:74.4727 },
-    "CBT":              { lat:15.8560, lng:74.5060 },
-    "Fish Market":      { lat:15.8530, lng:74.5030 },
-    "Bogar Ves":        { lat:15.8460, lng:74.4940 },
-    "RC Nagar":         { lat:15.8490, lng:74.5010 },
-    "Utsav":            { lat:15.8460, lng:74.4960 },
-    "Fort Circle":      { lat:15.8530, lng:74.5050 },
-    "Arun Theatre":     { lat:15.8500, lng:74.5030 },
-    "BCM Hostel":       { lat:15.8440, lng:74.4900 },
-    "Indal":            { lat:15.9029, lng:74.5250 },
-    "Azam Nagar":       { lat:15.8530, lng:74.5060 },
-    "Srinagar Garden":  { lat:15.8600, lng:74.5100 },
-    "Ganesh Chouk":     { lat:15.8630, lng:74.5070 },
-    "Tukaram Bank":     { lat:15.8490, lng:74.5010 },
-    "Vinayak Nagar":    { lat:15.8500, lng:74.5030 },
-    "Sulga":            { lat:15.8800, lng:74.5200 },
-    "Nehru Nagar":      { lat:15.8510, lng:74.5030 },
-    "Camp":             { lat:15.8490, lng:74.5010 },
-    "Gandhi Nagar":     { lat:15.8720, lng:74.5200 },
-    "Raghunath Peth":   { lat:15.8480, lng:74.4970 },
-    "KLE Engg College": { lat:15.8480, lng:74.4970 },
-    "Mandoli Road":     { lat:15.8400, lng:74.5000 },
+    "KLS GIT":           { lat:15.8155, lng:74.4868 },
+    "Mahantesh Nagar":   { lat:15.8734, lng:74.5350 },
+    "Hanuman Nagar":     { lat:15.8765, lng:74.4862 },
+    "Vadagaon":          { lat:15.8365, lng:74.5234 },
+    "Kakati":            { lat:15.9318, lng:74.5270 },
+    "Shahapur":          { lat:15.8461, lng:74.5167 },
+    "Bhagya Nagar":      { lat:15.8288, lng:74.5066 },
+    "Shahu Nagar":       { lat:15.8927, lng:74.5126 },
+    "Khanapur":          { lat:15.6452, lng:74.5214 },
+    "Channamma Circle":  { lat:15.8673, lng:74.5116 },
+    "RTO":               { lat:15.8964, lng:74.5425 },
+    "Ramteerth Nagar":   { lat:15.8907, lng:74.5433 },
+    "Marihal":           { lat:15.8801, lng:74.5607 },
+    "Machche":           { lat:15.7875, lng:74.4727 },
+    "CBT":               { lat:15.8560, lng:74.5060 },
+    "Fish Market":       { lat:15.8530, lng:74.5030 },
+    "Bogar Ves":         { lat:15.8460, lng:74.4940 },
+    "RC Nagar":          { lat:15.8490, lng:74.5010 },
+    "Utsav":             { lat:15.8460, lng:74.4960 },
+    "Fort Circle":       { lat:15.8530, lng:74.5050 },
+    "Arun Theatre":      { lat:15.8500, lng:74.5030 },
+    "BCM Hostel":        { lat:15.8440, lng:74.4900 },
+    "Indal":             { lat:15.9029, lng:74.5250 },
+    "Azam Nagar":        { lat:15.8530, lng:74.5060 },
+    "Srinagar Garden":   { lat:15.8600, lng:74.5100 },
+    "Ganesh Chouk":      { lat:15.8630, lng:74.5070 },
+    "Tukaram Bank":      { lat:15.8490, lng:74.5010 },
+    "Vinayak Nagar":     { lat:15.8500, lng:74.5030 },
+    "Sulga":             { lat:15.8800, lng:74.5200 },
+    "Nehru Nagar":       { lat:15.8510, lng:74.5030 },
+    "Camp":              { lat:15.8490, lng:74.5010 },
+    "Gandhi Nagar":      { lat:15.8720, lng:74.5200 },
+    "Raghunath Peth":    { lat:15.8480, lng:74.4970 },
+    "KLE Engg College":  { lat:15.8480, lng:74.4970 },
+    "Mandoli Road":      { lat:15.8400, lng:74.5000 },
     "Guru Prasad Colony":{ lat:15.8460, lng:74.4960 },
-    "Congress Road":    { lat:15.8490, lng:74.5010 },
-    "Sadashiv Nagar":   { lat:15.8490, lng:74.5020 },
-    "TV Centre":        { lat:15.8570, lng:74.5090 },
-    "Goa Ves":          { lat:15.8460, lng:74.4940 },
-    "Nath Pai Circle":  { lat:15.8480, lng:74.4950 },
-    "RPD":              { lat:15.8460, lng:74.4980 },
-    "Shindoli Cross":   { lat:15.8720, lng:74.5200 },
-    "BCM Hostel":       { lat:15.8440, lng:74.4900 }
+    "Congress Road":     { lat:15.8490, lng:74.5010 },
+    "Sadashiv Nagar":    { lat:15.8490, lng:74.5020 },
+    "TV Centre":         { lat:15.8570, lng:74.5090 },
+    "Goa Ves":           { lat:15.8460, lng:74.4940 },
+    "Nath Pai Circle":   { lat:15.8480, lng:74.4950 },
+    "RPD":               { lat:15.8460, lng:74.4980 },
+    "Shindoli Cross":    { lat:15.8720, lng:74.5200 }
   };
 
   const busRoutes = {
@@ -217,6 +221,7 @@
     bus16: ["Ramteerth Nagar","Ganesh Chouk","Srinagar Garden","Channamma Circle","Bogar Ves","KLS GIT"]
   };
 
+  // ── Stop markers ────────────────────────────────────────
   const stops = [
     { name:"KLS GIT College",      lat:15.8155, lng:74.4868, isCollege:true },
     { name:"Mahantesh Nagar",      lat:15.8734, lng:74.5350 },
@@ -232,7 +237,6 @@
     { name:"Ramteerth Nagar",      lat:15.8907, lng:74.5433 },
     { name:"Marihal",              lat:15.8801, lng:74.5607 },
     { name:"Indal Colony",         lat:15.9029, lng:74.5250 },
-    { name:"Sambra",               lat:15.8642, lng:74.6107 },
     { name:"Machche",              lat:15.7875, lng:74.4727 },
     { name:"Tilakwadi",            lat:15.8373, lng:74.5014 },
     { name:"Angol",                lat:15.8197, lng:74.5020 },
@@ -249,6 +253,7 @@
       .bindPopup('<b>' + (stop.isCollege ? '🏫 ' : '🚏 ') + stop.name + '</b>');
   });
 
+  // ── Helpers ─────────────────────────────────────────────
   function haversineKm(lat1, lng1, lat2, lng2) {
     const R = 6371, r = d => d * Math.PI / 180;
     const a = Math.sin(r(lat2-lat1)/2)**2
@@ -259,6 +264,7 @@
   let busMarker = null;
   let currentListener = null;
 
+  // ── Select bus ──────────────────────────────────────────
   function selectBus() {
     const selectedBus = document.getElementById('busSelect').value;
     if (!selectedBus) return;
