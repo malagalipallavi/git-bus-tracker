@@ -65,7 +65,6 @@
 
   <div class="card">
     <div class="card-title">⚙️ YOUR ASSIGNMENT</div>
-
     <div class="flabel">Trip / Shift</div>
     <select id="tripSelect" onchange="onTripChange()">
       <option value="">— Select your shift —</option>
@@ -75,12 +74,10 @@
       <option value="drop400">Evening Drop — 4:00 PM</option>
       <option value="drop515">Evening Drop — 5:15 PM</option>
     </select>
-
     <div class="flabel">Bus Number</div>
     <select id="busSelect" onchange="onBusChange()">
       <option value="">— Select shift first —</option>
     </select>
-
   </div>
 
   <div class="card">
@@ -141,148 +138,143 @@
   },1000);
 
   // ── BUS LIST PER SHIFT ────────────────────────────────
+  // Each bus has a UNIQUE id so routes object keys don't clash
   const shiftBuses = {
-
     morning730: [
-      { id:"bus",  label:"Bus   — Vadagaon (via Nath Pai Circle)" },
-      { id:"bus",  label:"Bus   — Vadagaon (alt route)" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar (Harsha Hotel)" },
-      { id:"bus",  label:"Bus   — Hanuman Nagar" },
-      { id:"bus",  label:"Bus   — Ganeshpur" },
-      { id:"bus", label:"Bus  — Shahapur" },
-      { id:"bus", label:"Bus  — Kakati" },
-      { id:"bus",  label:"Bus   — Bhagya Nagar" },
-      { id:"bus", label:"Bus  — Marihal" },
-      { id:"bus",  label:"Bus   — CBT" },
-      { id:"bus", label:"Bus  — RC Nagar" },
-      { id:"bus", label:"Bus  — Shahu Nagar" },
-      { id:"bus",  label:"Bus   — Khanapur" }
+      { id:"m730_b1",  label:"Bus — Vadagaon (via Nath Pai Circle)" },
+      { id:"m730_b2",  label:"Bus — Vadagaon (alt route)" },
+      { id:"m730_b3",  label:"Bus — Mahantesh Nagar" },
+      { id:"m730_b4",  label:"Bus — Mahantesh Nagar (Harsha Hotel)" },
+      { id:"m730_b5",  label:"Bus — Hanuman Nagar" },
+      { id:"m730_b6",  label:"Bus — Ganeshpur" },
+      { id:"m730_b7",  label:"Bus — Shahapur" },
+      { id:"m730_b8",  label:"Bus — Kakati" },
+      { id:"m730_b9",  label:"Bus — Bhagya Nagar" },
+      { id:"m730_b10", label:"Bus — Marihal" },
+      { id:"m730_b11", label:"Bus — CBT" },
+      { id:"m730_b12", label:"Bus — RC Nagar" },
+      { id:"m730_b13", label:"Bus — Shahu Nagar" },
+      { id:"m730_b14", label:"Bus — Khanapur" }
     ],
-
     morning900: [
-      { id:"bus",  label:"Bus   — Vadagaon (via Nath Pai Circle)" },
-      { id:"bus",  label:"Bus   — Vadagaon (alt route)" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar (Harsha Hotel)" },
-      { id:"bus",  label:"Bus   — Hanuman Nagar" },
-      { id:"bus",  label:"Bus   — Ganeshpur" },
-      { id:"bus", label:"Bus  — Shahapur" },
-      { id:"bus", label:"Bus  — Kakati" },
-      { id:"bus",  label:"Bus   — Bhagya Nagar" },
-      { id:"bus", label:"Bus  — Marihal" },
-      { id:"bus",  label:"Bus   — CBT" },
-      { id:"bus", label:"Bus  — RC Nagar" },
-      { id:"bus", label:"Bus  — Shahu Nagar" },
-      { id:"bus",  label:"Bus   — Khanapur" }
+      { id:"m900_b1",  label:"Bus — Vadagaon (via Nath Pai Circle)" },
+      { id:"m900_b2",  label:"Bus — Vadagaon (alt route)" },
+      { id:"m900_b3",  label:"Bus — Mahantesh Nagar" },
+      { id:"m900_b4",  label:"Bus — Mahantesh Nagar (Harsha Hotel)" },
+      { id:"m900_b5",  label:"Bus — Hanuman Nagar" },
+      { id:"m900_b6",  label:"Bus — Ganeshpur" },
+      { id:"m900_b7",  label:"Bus — Shahapur" },
+      { id:"m900_b8",  label:"Bus — Kakati" },
+      { id:"m900_b9",  label:"Bus — Bhagya Nagar" },
+      { id:"m900_b10", label:"Bus — Marihal" },
+      { id:"m900_b11", label:"Bus — CBT" },
+      { id:"m900_b12", label:"Bus — RC Nagar" },
+      { id:"m900_b13", label:"Bus — Shahu Nagar" },
+      { id:"m900_b14", label:"Bus — Khanapur" }
     ],
-
     drop130: [
-      { id:"bus",  label:"Bus   — Vadagaon & Bhagya Nagar" },
-      { id:"bus", label:"Bus  — RC Nagar" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar" },
-      { id:"bus",  label:"Bus   — Hanuman Nagar & Ganeshpur" },
-      { id:"bus",  label:"Bus   — CBT" },
-      { id:"bus", label:"Bus  — Kakati" },
-      { id:"bus", label:"Bus  — Sambra & Marihal" },
-      { id:"bus", label:"Bus  — Shahapur" },
-      { id:"bus",  label:"Bus   — Khanapur" }
+      { id:"d130_b1", label:"Bus — Vadagaon & Bhagya Nagar" },
+      { id:"d130_b2", label:"Bus — RC Nagar" },
+      { id:"d130_b3", label:"Bus — Mahantesh Nagar" },
+      { id:"d130_b4", label:"Bus — Hanuman Nagar & Ganeshpur" },
+      { id:"d130_b5", label:"Bus — CBT" },
+      { id:"d130_b6", label:"Bus — Kakati" },
+      { id:"d130_b7", label:"Bus — Sambra & Marihal" },
+      { id:"d130_b8", label:"Bus — Shahapur" },
+      { id:"d130_b9", label:"Bus — Khanapur" }
     ],
-
     drop400: [
-      { id:"bus", label:"Bus  — Kakati" },
-      { id:"bus", label:"Bus  — RC Nagar" },
-      { id:"bus", label:"Bus  — Shahapur" },
-      { id:"bus",  label:"Bus   — Hanuman Nagar & Ganeshpur" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar" },
-      { id:"bus",  label:"Bus   — Vadagaon" },
-      { id:"bus",  label:"Bus   — Bhagya Nagar" },
-      { id:"bus",  label:"Bus   — CBT" }
+      { id:"d400_b1", label:"Bus — Kakati" },
+      { id:"d400_b2", label:"Bus — RC Nagar" },
+      { id:"d400_b3", label:"Bus — Shahapur" },
+      { id:"d400_b4", label:"Bus — Hanuman Nagar & Ganeshpur" },
+      { id:"d400_b5", label:"Bus — Mahantesh Nagar" },
+      { id:"d400_b6", label:"Bus — Vadagaon" },
+      { id:"d400_b7", label:"Bus — Bhagya Nagar" },
+      { id:"d400_b8", label:"Bus — CBT" }
     ],
-
     drop515: [
-      { id:"bus", label:"Bus  — Kakati" },
-      { id:"bus",  label:"Bus   — Vadagaon" },
-      { id:"bus", label:"Bus  — RC Nagar" },
-      { id:"bus", label:"Bus  — Shahapur" },
-      { id:"bus",  label:"Bus   — CBT" },
-      { id:"bus",  label:"Bus   — Bhagya Nagar" },
-      { id:"bus",  label:"Bus   — Ganeshpur" },
-      { id:"bus",  label:"Bus   — Mahantesh Nagar" },
-      { id:"bus",  label:"Bus   — Hanuman Nagar" },
-      { id:"bus", label:"Bus  — Marihal" },
-      { id:"bus",  label:"Bus   — Khanapur" }
+      { id:"d515_b1",  label:"Bus — Kakati" },
+      { id:"d515_b2",  label:"Bus — Vadagaon" },
+      { id:"d515_b3",  label:"Bus — RC Nagar" },
+      { id:"d515_b4",  label:"Bus — Shahapur" },
+      { id:"d515_b5",  label:"Bus — CBT" },
+      { id:"d515_b6",  label:"Bus — Bhagya Nagar" },
+      { id:"d515_b7",  label:"Bus — Ganeshpur" },
+      { id:"d515_b8",  label:"Bus — Mahantesh Nagar" },
+      { id:"d515_b9",  label:"Bus — Hanuman Nagar" },
+      { id:"d515_b10", label:"Bus — Marihal" },
+      { id:"d515_b11", label:"Bus — Khanapur" }
     ]
   };
 
-  // ── ROUTES PER BUS PER SHIFT ──────────────────────────
+  // ── ROUTES PER BUS (unique keys now — no overwriting!) ──
   const routes = {
-    morning730: {
-      bus: ["Vadagaon","Nath Pai Circle","Goa Ves","RPD Cross","KLS GIT"],
-      bus: ["Vadagaon","Channamma Circle","CBT","KLS GIT"],
-      bus: ["Surabhi hotel","LSA school","Kanbargi","Ganesh circle ","Uday school stop 0 ","KLS GIT"],
-      bus: ["Mahantesh Nagar (Harsha Hotel)","more store","Nandini diary ","Sidnal stop","Mahantesh nagar 1st stop ","Uday school stop 1 ","Stadium","Harsha hotel","Janata plot","Sai mandir","Srinagar garden","Srinagar stop 1", "SGBIT","Kannada bhavan ","Ramdev ","Chennamma circle","Bogarves","KLS GIT"],
-      bus: ["Ganesh temple ","Kuvempu nagar","KLE School", "Sahaydri nagar","Kumarswami layout ","Hanuman Nagar 2nd stop","Hanuman nagar circle","Sadashiv nagar","Chennamma circle","Bogarves","Congress Road","KLS GIT"],
-      bus: ["Ganeshpur","Channamma Circle","CBT","KLS GIT"],
-      bus:["Shahapur","Tukaram Bank","Goa Ves","RPD Cross","KLS GIT"],
-      bus:["Kakati","Indal Colony","Azam Nagar","Channamma Circle","KLS GIT"],
-      bus: ["Bhagya Nagar","Raghunath Peth","KLE Engg College","KLS GIT"],
-      bus:["Marihal","Gandhi Nagar","Fort Circle","KLS GIT"],
-      bus: ["CBT","RTO","Channamma Circle","Fish Market","KLS GIT"],
-      bus:["RC Nagar","Mandoli Road","Guru Prasad Colony","KLS GIT"],
-      bus:["Shahu Nagar","Nehru Nagar","Camp","Congress Road","KLS GIT"],
-      bus: ["Khanapur","BCM Hostel","Machhe","KLS GIT"]
-    },
-    morning900: {
-      bus: ["Vadagaon","Nath Pai Circle","Goa Ves","RPD Cross","KLS GIT"],
-      bus: ["Vadagaon","Channamma Circle","CBT","KLS GIT"],
-      bus: ["Mahantesh Nagar","RTO","CBT","Arun Theatre","KLS GIT"],
-      bus: ["Mahantesh Nagar (Harsha Hotel)","Ramteerth Nagar","CBT","KLS GIT"],
-      bus: ["Hanuman Nagar","TV Centre","Sadashiv Nagar","Congress Road","KLS GIT"],
-      bus: ["Ganeshpur","Channamma Circle","CBT","KLS GIT"],
-      bus:["Shahapur","Tukaram Bank","Goa Ves","RPD Cross","KLS GIT"],
-      bus:["Kakati","Indal Colony","Azam Nagar","Channamma Circle","KLS GIT"],
-      bus: ["Bhagya Nagar","Raghunath Peth","KLE Engg College","KLS GIT"],
-      bus:["Marihal","Gandhi Nagar","Fort Circle","KLS GIT"],
-      bus: ["CBT","RTO","Channamma Circle","Fish Market","KLS GIT"],
-      bus:["RC Nagar","Mandoli Road","Guru Prasad Colony","KLS GIT"],
-      bus:["Shahu Nagar","Nehru Nagar","Camp","Congress Road","KLS GIT"],
-      bus: ["Khanapur","BCM Hostel","Machhe","KLS GIT"]
-    },
-    drop130: {
-      bus: ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon","Bhagya Nagar"],
-      bus:["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
-      bus: ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
-      bus: ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar","Ganeshpur"],
-      bus: ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"],
-      bus:["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
-      bus:["KLS GIT","Fort Circle","Gandhi Nagar","Marihal","Sambra"],
-      bus:["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
-      bus: ["KLS GIT","Machhe","BCM Hostel","Khanapur"]
-    },
-    drop400: {
-      bus:["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
-      bus:["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
-      bus:["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
-      bus: ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar","Ganeshpur"],
-      bus: ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
-      bus: ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon"],
-      bus: ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
-      bus: ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"]
-    },
-    drop515: {
-      bus:["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
-      bus: ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon"],
-      bus:["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
-      bus:["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
-      bus: ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"],
-      bus: ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
-      bus: ["KLS GIT","CBT","Channamma Circle","Ganeshpur"],
-      bus: ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
-      bus: ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar"],
-      bus:["KLS GIT","Fort Circle","Gandhi Nagar","Marihal"],
-      bus: ["KLS GIT","Machhe","BCM Hostel","Khanapur"]
-    }
+    // MORNING 7:30
+    m730_b1:  ["Vadagaon","Nath Pai Circle","Goa Ves","RPD Cross","KLS GIT"],
+    m730_b2:  ["Vadagaon","Channamma Circle","CBT","KLS GIT"],
+    m730_b3:  ["Surabhi Hotel","LSA School","Kanbargi","Ganesh Circle","Uday School Stop","KLS GIT"],
+    m730_b4:  ["Mahantesh Nagar (Harsha Hotel)","More Store","Nandini Dairy","Sidnal Stop","Mahantesh Nagar 1st Stop","Uday School Stop","Stadium","Harsha Hotel","Janata Plot","Sai Mandir","Srinagar Garden","Srinagar Stop","SGBIT","Kannada Bhavan","Ramdev","Channamma Circle","Bogarves","KLS GIT"],
+    m730_b5:  ["Ganesh Temple","Kuvempu Nagar","KLE School","Sahaydri Nagar","Kumarswami Layout","Hanuman Nagar 2nd Stop","Hanuman Nagar Circle","Sadashiv Nagar","Channamma Circle","Bogarves","Congress Road","KLS GIT"],
+    m730_b6:  ["Ganeshpur","Channamma Circle","CBT","KLS GIT"],
+    m730_b7:  ["Shahapur","Tukaram Bank","Goa Ves","RPD Cross","KLS GIT"],
+    m730_b8:  ["Kakati","Indal Colony","Azam Nagar","Channamma Circle","KLS GIT"],
+    m730_b9:  ["Bhagya Nagar","Raghunath Peth","KLE Engg College","KLS GIT"],
+    m730_b10: ["Marihal","Gandhi Nagar","Fort Circle","KLS GIT"],
+    m730_b11: ["CBT","RTO","Channamma Circle","Fish Market","KLS GIT"],
+    m730_b12: ["RC Nagar","Mandoli Road","Guru Prasad Colony","KLS GIT"],
+    m730_b13: ["Shahu Nagar","Nehru Nagar","Camp","Congress Road","KLS GIT"],
+    m730_b14: ["Khanapur","BCM Hostel","Machhe","KLS GIT"],
+
+    // MORNING 9:00
+    m900_b1:  ["Vadagaon","Nath Pai Circle","Goa Ves","RPD Cross","KLS GIT"],
+    m900_b2:  ["Vadagaon","Channamma Circle","CBT","KLS GIT"],
+    m900_b3:  ["Mahantesh Nagar","RTO","CBT","Arun Theatre","KLS GIT"],
+    m900_b4:  ["Mahantesh Nagar (Harsha Hotel)","Ramteerth Nagar","CBT","KLS GIT"],
+    m900_b5:  ["Hanuman Nagar","TV Centre","Sadashiv Nagar","Congress Road","KLS GIT"],
+    m900_b6:  ["Ganeshpur","Channamma Circle","CBT","KLS GIT"],
+    m900_b7:  ["Shahapur","Tukaram Bank","Goa Ves","RPD Cross","KLS GIT"],
+    m900_b8:  ["Kakati","Indal Colony","Azam Nagar","Channamma Circle","KLS GIT"],
+    m900_b9:  ["Bhagya Nagar","Raghunath Peth","KLE Engg College","KLS GIT"],
+    m900_b10: ["Marihal","Gandhi Nagar","Fort Circle","KLS GIT"],
+    m900_b11: ["CBT","RTO","Channamma Circle","Fish Market","KLS GIT"],
+    m900_b12: ["RC Nagar","Mandoli Road","Guru Prasad Colony","KLS GIT"],
+    m900_b13: ["Shahu Nagar","Nehru Nagar","Camp","Congress Road","KLS GIT"],
+    m900_b14: ["Khanapur","BCM Hostel","Machhe","KLS GIT"],
+
+    // DROP 1:30
+    d130_b1: ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon","Bhagya Nagar"],
+    d130_b2: ["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
+    d130_b3: ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
+    d130_b4: ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar","Ganeshpur"],
+    d130_b5: ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"],
+    d130_b6: ["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
+    d130_b7: ["KLS GIT","Fort Circle","Gandhi Nagar","Marihal","Sambra"],
+    d130_b8: ["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
+    d130_b9: ["KLS GIT","Machhe","BCM Hostel","Khanapur"],
+
+    // DROP 4:00
+    d400_b1: ["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
+    d400_b2: ["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
+    d400_b3: ["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
+    d400_b4: ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar","Ganeshpur"],
+    d400_b5: ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
+    d400_b6: ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon"],
+    d400_b7: ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
+    d400_b8: ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"],
+
+    // DROP 5:15
+    d515_b1:  ["KLS GIT","Channamma Circle","Azam Nagar","Indal Colony","Kakati"],
+    d515_b2:  ["KLS GIT","RPD Cross","Goa Ves","Nath Pai Circle","Vadagaon"],
+    d515_b3:  ["KLS GIT","Guru Prasad Colony","Mandoli Road","RC Nagar"],
+    d515_b4:  ["KLS GIT","RPD Cross","Goa Ves","Tukaram Bank","Shahapur"],
+    d515_b5:  ["KLS GIT","Fish Market","Channamma Circle","RTO","CBT"],
+    d515_b6:  ["KLS GIT","KLE Engg College","Raghunath Peth","Bhagya Nagar"],
+    d515_b7:  ["KLS GIT","CBT","Channamma Circle","Ganeshpur"],
+    d515_b8:  ["KLS GIT","Arun Theatre","CBT","RTO","Mahantesh Nagar"],
+    d515_b9:  ["KLS GIT","Congress Road","Sadashiv Nagar","TV Centre","Hanuman Nagar"],
+    d515_b10: ["KLS GIT","Fort Circle","Gandhi Nagar","Marihal"],
+    d515_b11: ["KLS GIT","Machhe","BCM Hostel","Khanapur"]
   };
 
   let isTracking=false, watchId=null, gpsCount=0;
@@ -292,7 +284,7 @@
   function onTripChange() {
     selTrip = document.getElementById('tripSelect').value;
     selBus  = '';
-    isTracking && stopTracking();
+    if(isTracking) stopTracking();
 
     const busSelect = document.getElementById('busSelect');
     busSelect.innerHTML = '<option value="">— Select your bus —</option>';
@@ -318,7 +310,7 @@
     selBus = document.getElementById('busSelect').value;
     if(!selBus || !selTrip) return;
 
-    const r = routes[selTrip]?.[selBus] || [];
+    const r = routes[selBus] || [];
     document.getElementById('nextStop').innerText = r[r.length-1] || '—';
 
     let html='';
@@ -349,7 +341,6 @@
     document.getElementById('bdot').classList.add('live');
     document.getElementById('btext').innerText='Location LIVE';
 
-    // Keep screen awake
     if('wakeLock' in navigator) {
       navigator.wakeLock.request('screen').catch(()=>{});
     }
